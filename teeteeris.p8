@@ -1,121 +1,35 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
-function _init()
- local _ = init_pieces()
- names   = _.names
- stats   = _.stats
- shapes  = _.shapes
+i=1 o=2 t=3 l=4 s=5 j=6 z=7
 
+function _init()
+ names = { i,o,t,l,s,j,z }
+ stats = { 0,0,0,0,0,0,0 }
  lines = 0
  score = 0
  level = 0
 
-	▒ = init_board() -- board(b)
-
+ shapes  = init_shapes()
  sprites = init_sprites()
  droplag = init_droplag()
 
- bag = {}         -- pieces
- nxt = rnd(names) -- next
- …  = spawn()    -- piece(q)
+ bag = {}           -- pieces
+ nxt = rnd(names)   -- next
+ ▒  = init_board() -- board(b)
+ …  = spawn()      -- piece(q)
 
-	poke(0x5f5d, 4)  -- "das"
+ poke(0x5f5d, 4)  -- "das"
  pal({ [0] = 129 }, 1)
-		
-	tick = 0
+
+ tick = 0
  game = 'going'
-end
-
-function init_sprites()
- local black  = 0
- local blue   = 1
- local purple = 2
- local green  = 3
- local brown  = 4
- local puke   = 5
- local gray   = 6
- local white  = 7
- local red    = 8
- local orange = 9
- local yellow = 10
- local lime   = 11
- local sky    = 12
- local mauve  = 13
- local pink   = 14
- local tan    = 15
-
- local colors = {
-  [0] = { [puke]   = 131,
-	         [mauve]  = 140, },
-	         
-	 [1] = { [purple] = 130,
-	         [green]  = 131,
-	         [yellow] = 134,
-	         [lime]   = 136,
-	         [sky]    = 137, },
-	         
-	 [2] = { [green]  = 139,
- 		       [brown]  = 135,
- 		       [lime]   = 138,
- 		       [mauve]  = 140, },
- 	
- 	[3] = { [purple] = 132,
-							 		[puke]   = 134,
-							 		[red]    = 136,
-							 		[orange] = 139,
-							 		[yellow] = 131,
-							 		[mauve]  = 140, },
- 	
- 	[4] = { [purple] = 130,
-							 		[brown]  = 131,
-							 		[orange] = 139,
-							 		[sky]    = 138,
-							 		[tan]    = 135, },
-
- 	[5] = { [purple] = 132,
-							 		[green]  = 137,
-							 		[puke]   = 134,
-							 		[pink]   = 135, },
- 	
- 	[6] = { [puke]   = 134,
-							 		[orange] = 136,
-					 				[yellow] = 130,
-					 				[lime]   = 140 },
-
- 	[7] = { [purple] = 130,
-							 		[green]  = 134,
-							 		[sky]    = 135,
-							 		[pink]   = 132, },
-
- 	[8] = { [orange] = 130,
- 		       [yellow] = 135,
- 		       [lime]   = 136, }
- }
-
- pal()
- pal({[0] = 129}, 1)
- 
- local palette = level % 9
- local offset  = (palette * 4)
- 
-	pal(colors[palette], 1)
-
- return {
-	 ['i'] = 1 + offset,
-	 ['o'] = 2 + offset,
- 	['t'] = 2 + offset,
- 	['l'] = 3 + offset,
- 	['s'] = 3 + offset,
- 	['j'] = 4 + offset,
- 	['z'] = 4 + offset
- }
 end
 
 function spawn()
  stats[nxt] += 1
  local name = nxt
- 
+
  if #bag == 0 then -- bag empty
   bag = pack(unpack(names))
 
@@ -127,7 +41,7 @@ function spawn()
    bag[i], bag[p] =
     bag[p], bag[i]
   end
-  
+
   -- add a few extra random
   for _ = 1,3 do
    add(bag, rnd(names))
@@ -139,7 +53,7 @@ function spawn()
  local x = 4
  local y = 1
  local spin = 0
- 
+
  for █ in all(shapes[name][spin]) do
   if ▒[y + █.y][x + █.x] then
    game = 'over'
@@ -172,7 +86,7 @@ function move(_)
    return
   elseif █.y+y == #▒ or
    ▒[█.y+y+1][█.x+x] then
-      
+
    return lock(spin, x, y)
   end
  end
@@ -200,7 +114,7 @@ function lock(spin, x, y)
    add(full, y)
   end
  end
- 
+
  for y in all(full) do
   deli(▒, y)
  end
@@ -262,8 +176,93 @@ function init_droplag()
     level <= 28 then
   return 2
  end
- 
+
  return 1
+end
+
+function init_sprites()
+ local black  = 0
+ local blue   = 1
+ local purple = 2
+ local green  = 3
+ local brown  = 4
+ local puke   = 5
+ local gray   = 6
+ local white  = 7
+ local red    = 8
+ local orange = 9
+ local yellow = 10
+ local lime   = 11
+ local sky    = 12
+ local mauve  = 13
+ local pink   = 14
+ local tan    = 15
+
+ local colors = {
+  [0] = { [puke]   = 131,
+          [mauve]  = 140, },
+
+  [1] = { [purple] = 130,
+          [green]  = 131,
+          [yellow] = 134,
+          [lime]   = 136,
+          [sky]    = 137, },
+
+  [2] = { [green]  = 139,
+          [brown]  = 135,
+          [lime]   = 138,
+          [mauve]  = 140, },
+
+  [3] = { [purple] = 132,
+          [puke]   = 134,
+          [red]    = 136,
+          [orange] = 139,
+          [yellow] = 131,
+          [mauve]  = 140, },
+
+  [4] = { [purple] = 130,
+          [brown]  = 131,
+          [orange] = 139,
+          [sky]    = 138,
+          [tan]    = 135, },
+
+  [5] = { [purple] = 132,
+          [green]  = 137,
+          [puke]   = 134,
+          [pink]   = 135, },
+
+  [6] = { [puke]   = 134,
+          [orange] = 136,
+          [yellow] = 130,
+          [lime]   = 140 },
+
+  [7] = { [purple] = 130,
+          [green]  = 134,
+          [sky]    = 135,
+          [pink]   = 132, },
+
+  [8] = { [orange] = 130,
+          [yellow] = 135,
+          [lime]   = 136, }
+ }
+
+ pal()
+ pal({[0] = 129}, 1)
+
+ local palette = level % 9
+ local offset  = (palette * 4)
+
+ pal(colors[palette], 1)
+
+ return {
+  [i] = 1 + offset,
+  [o] = 2 + offset,
+  [t] = 2 + offset,
+  [l] = 3 + offset,
+  [s] = 3 + offset,
+  [j] = 4 + offset,
+  [z] = 4 + offset
+ }
 end
 
 function _draw()
@@ -272,15 +271,15 @@ function _draw()
  local ▒_top    = 2
  local ▒_left   = 32
  local ▒_width  = #▒[1] * █_size
-	local ▒_height = #▒    * █_size
+ local ▒_height = #▒    * █_size
 
-	cls()
+ cls()
 
  rectfill(
- 	▒_left, ▒_top,
- 	▒_left + ▒_width,
- 	▒_top  + ▒_height,
- 	0
+  ▒_left, ▒_top,
+  ▒_left + ▒_width,
+  ▒_top  + ▒_height,
+  0
  )
 
  cursor(2, 2, 7)
@@ -306,7 +305,7 @@ function _draw()
  for n in all(names) do
   local pre = '00'
   local num = stats[n]
-  
+
   if (num > 009) pre = '0'
   if (num > 090) pre = ''
 
@@ -330,7 +329,7 @@ function _draw()
    end
   end
  end
- 
+
  for █ in all(
   shapes[….name][….spin]) do
 
@@ -342,12 +341,12 @@ function _draw()
  end
 
  rect(
- 	▒_left, ▒_top,
- 	▒_left + ▒_width,
- 	▒_top  + ▒_height,
- 	6
+  ▒_left, ▒_top,
+  ▒_left + ▒_width,
+  ▒_top  + ▒_height,
+  6
  )
- 
+
  if game == 'over' then
   rrectfill(
    40, 36, 45, 15, 2, 7)
@@ -385,22 +384,22 @@ function _update60()
  if btn(⬇️) then
   if (0 == tick % 4) down()
  elseif tick >= droplag then
-	 tick = 0
+  tick = 0
 
-	 down()
+  down()
  end
- 
+
  tick += 1
 end
 
 function left()
  move({ yaw = -1 })
 end
- 
+
 function right()
  move({ yaw = 1 })
 end
- 
+
 function down()
  move({ pitch = 1 })
 end
@@ -428,139 +427,125 @@ function init_line()
  for col = 1, 10 do
   lin[col] = false
  end
- 
+
  return lin
 end
 
-function init_pieces()
-	local tetrominos = {
-	 t = {
-	  [0] = { { ∧,█    },
-	          { █,█,█ } },
-	
-	  [3] = { { ∧,█    },
-	          { ∧,█,█ },
-	          { ∧,█    } },
-	
-	  [6] = { { ∧,∧,∧ },
-	          { █,█,█ },
-	          { ∧,█    } },
-	 
-	  [9] = { { ∧,█ },
-	          { █,█ },
-	          { ∧,█ } }
-	 },
-	
-	 j = {
-	  [0] = { { █       },
-	          { █,█,█ } },
-	
-	  [3] = { { ∧,█,█ },
-	          { ∧,█    },
-	          { ∧,█    } },
-	 
-	  [6] = { { ∧,∧,∧ },
-	          { █,█,█ },
-	          { ∧,∧,█ } },
-	
-	  [9] = { { ∧,█ },
-	          { ∧,█ },
-	          { █,█ } }
-	 },
-	
-	 z = {
-	  [0] = { { █,█    },
-	          { ∧,█,█ } },
-	 
-	  [3] = { { ∧,∧,█ },
-	          { ∧,█,█ },
-	          { ∧,█    } }
-	 },
-	 
-	 o = {
-	  [0] = { { █,█ },
-	          { █,█ } }
-	 },
-	
-	 s = {
-	  [0] = { { ∧,█,█ },
-	          { █,█    } },
-	 
-	  [3] = { { █,∧ },
-	          { █,█ },
-	          { ∧,█ } }
-	 },
-	
-	 l = {
-	  [0] = { { ∧,∧,█ },
-	          { █,█,█ } },
-	
-	  [3] = { { ∧,█    },
-	          { ∧,█    },
-	          { ∧,█,█ } },
-	
-	  [6] = { { ∧,∧,∧ },
-	          { █,█,█ },
-	          { █       } },
-	
-	  [9] = { { █,█ },
-	          { ∧,█ },
-	          { ∧,█ } }
-	 },
-	
-	 i = {
-	  [0] = { { █,█,█,█ } },
-	
-	  [3] = { { ∧,█ },
-	          { ∧,█ },
-	          { ∧,█ },
-	          { ∧,█ } },
-	 }
-	}
-	
-	local names = {}
-	for k,_ in pairs(tetrominos) do
-	 add(names, k)
-	end
-		
-	local stats = {}
-	for n in all(names) do
-	 stats[n] = 0
-	end
-	
-	local shapes = {}
-	for n in all(names) do
-	 shapes[n] = shapes[n] or {}
-	
-	 local t = tetrominos[n]
-	 t[3] = t[3] or t[0]
-	 t[6] = t[6] or t[0]
-	 t[9] = t[9] or t[3]
-	 
-	 for spin in all({ 0,3,6,9 }) do
-	  local rows = t[spin]
-	  
-	  shapes[n][spin] =
-	   shapes[n][spin] or {}
-	
-	  for y, row in pairs(rows) do
-	   for x, char in pairs(row) do
-	    if char == █ then
-	     add(shapes[n][spin], {
-	      y = y-1,
-	      x = x-1
-	     })
-	    end
-	   end
-	  end
-	 end
-	end
-	
-	return {
-	 names  = names,
-	 stats  = stats,
-  shapes = shapes
-	}
+function init_shapes()
+ local tetrominos = {
+  [t] = {
+   [0] = { { ∧,█    },
+           { █,█,█ } },
+
+   [3] = { { ∧,█    },
+           { ∧,█,█ },
+           { ∧,█    } },
+
+   [6] = { { ∧,∧,∧ },
+           { █,█,█ },
+           { ∧,█    } },
+
+   [9] = { { ∧,█ },
+           { █,█ },
+           { ∧,█ } }
+  },
+
+  [j] = {
+   [0] = { { █       },
+           { █,█,█ } },
+
+   [3] = { { ∧,█,█ },
+           { ∧,█    },
+           { ∧,█    } },
+
+   [6] = { { ∧,∧,∧ },
+           { █,█,█ },
+           { ∧,∧,█ } },
+
+   [9] = { { ∧,█ },
+           { ∧,█ },
+           { █,█ } }
+  },
+
+  [z] = {
+   [0] = { { █,█    },
+           { ∧,█,█ } },
+
+   [3] = { { ∧,∧,█ },
+           { ∧,█,█ },
+           { ∧,█    } }
+  },
+
+  [o] = {
+   [0] = { { █,█ },
+           { █,█ } }
+  },
+
+  [s] = {
+   [0] = { { ∧,█,█ },
+           { █,█    } },
+
+   [3] = { { █,∧ },
+           { █,█ },
+           { ∧,█ } }
+  },
+
+  [l] = {
+   [0] = { { ∧,∧,█ },
+           { █,█,█ } },
+
+   [3] = { { ∧,█    },
+           { ∧,█    },
+           { ∧,█,█ } },
+
+   [6] = { { ∧,∧,∧ },
+           { █,█,█ },
+           { █       } },
+
+   [9] = { { █,█ },
+           { ∧,█ },
+           { ∧,█ } }
+  },
+
+  [i] = {
+   [0] = { { █,█,█,█ } },
+
+   [3] = { { ∧,█ },
+           { ∧,█ },
+           { ∧,█ },
+           { ∧,█ } },
+  }
+ }
+
+ local shapes = {}
+ for n in all(names) do
+  shapes[n] = shapes[n] or {}
+
+  local shp = tetrominos[n]
+  shp[3] = shp[3] or shp[0]
+  shp[6] = shp[6] or shp[0]
+  shp[9] = shp[9] or shp[3]
+
+  for spin in all({ 0,3,6,9 }) do
+   local rows = shp[spin]
+
+   shapes[n][spin] =
+    shapes[n][spin] or {}
+
+   for y, row in pairs(rows) do
+    for x, char in pairs(row) do
+     if char == █ then
+      add(shapes[n][spin], {
+       y = y-1,
+       x = x-1
+      })
+     end
+    end
+   end
+  end
+ end
+
+ return shapes
 end
 
 __gfx__
