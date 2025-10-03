@@ -48,9 +48,7 @@ function spawn()
 
  nxt = deli(bag)
 
- local x = 4
- local y = 1
- local spin = 0
+ local x, y, spin = 4, 1, 0
 
  for █ in all(shapes[name][spin]) do
   if ▒[y + █.y][x + █.x] != 0 then
