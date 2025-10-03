@@ -53,7 +53,7 @@ function spawn()
  local spin = 0
 
  for █ in all(shapes[name][spin]) do
-  if ▒[y + █.y][x + █.x] then
+  if ▒[y + █.y][x + █.x] != 0 then
    game = 'over'
   end
  end
@@ -79,11 +79,11 @@ function move(_)
 
   if █.x+x < 1  or
      █.x+x > 10 or
-     ▒[█.y+y][█.x+x] then
+     ▒[█.y+y][█.x+x] != 0 then
 
    return
   elseif █.y+y == #▒ or
-   ▒[█.y+y+1][█.x+x] then
+   ▒[█.y+y+1][█.x+x] != 0 then
 
    return lock(spin, x, y)
   end
@@ -108,7 +108,7 @@ function lock(spin, x, y)
 
  local full = {}
  for y = #▒, 1, -1 do
-  if 0 == count(▒[y], false) then
+  if 0 == count(▒[y], 0) then
    add(full, y)
   end
  end
@@ -124,8 +124,9 @@ function lock(spin, x, y)
  end
 
  for _ = 1, #full do
-  add(▒, init_line(), 1)
-  lines += 1
+  add(▒,
+   { 0,0,0,0,0,0,0,0,0,0 }, 1)
+ end
 
   if lines > 0 and
    0 == (lines % 10) then
@@ -414,19 +415,11 @@ function init_board()
  local board = {}
 
  for col = 1,20 do
-  board[col] = init_line()
+  board[col] =
+   { 0,0,0,0,0,0,0,0,0,0 }
  end
 
  return board
-end
-
-function init_line()
- local lin = {}
- for col = 1, 10 do
-  lin[col] = false
- end
-
- return lin
 end
 
 function init_shapes()
