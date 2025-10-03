@@ -31,22 +31,14 @@ function spawn()
  if #bag == 0 then -- bag empty
   bag = pack(unpack(names))
 
-  -- shuffle the 7 pieces
-  srand(time())
-  for i = #bag,1,-1 do
-   p=flr(rnd(i))+1
-
-   bag[i], bag[p] =
-    bag[p], bag[i]
-  end
-
   -- add a few extra random
   for _ = 1,3 do
    add(bag, rnd(names))
   end
  end
 
- nxt = deli(bag)
+ srand(time())
+ nxt = del(bag, rnd(bag))
 
  local x, y, spin = 4, 1, 0
 
