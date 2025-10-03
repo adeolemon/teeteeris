@@ -27,6 +27,7 @@ end
 function spawn()
  stats[nxt] += 1
  local name = nxt
+ local spin, y, x = 0, 1, 4
 
  if #bag == 0 then -- bag empty
   bag = pack(unpack(names))
@@ -39,8 +40,6 @@ function spawn()
 
  srand(time())
  nxt = del(bag, rnd(bag))
-
- local x, y, spin = 4, 1, 0
 
  for █ in all(shapes[name][spin]) do
   if ▒[y + █.y][x + █.x] != 0 then
@@ -96,43 +95,39 @@ function lock(spin, x, y)
   ▒[█.y+y][█.x+x] = ….name
  end
 
- local full = {}
+ local cleared = 0
+
  for y = #▒, 1, -1 do
   if 0 == count(▒[y], 0) then
-   add(full, y)
+   deli(▒, y)
+   cleared += 1
   end
  end
 
- for y in all(full) do
-  deli(▒, y)
- end
-
- if #full > 0 then
-  sfx(2)
- else
-  sfx(1)
- end
-
- for _ = 1, #full do
+ for _ = 1, cleared do
   add(▒,
    { 0,0,0,0,0,0,0,0,0,0 }, 1)
  end
 
- lines += #full
+ lines += cleared
 
- if lines > 0 and
-  0 == (lines % 10) then
-
-  uplevel()
+ if cleared > 0 then
+  uplevel(flr(lines/10))
+ elseif cleared == 0 then
+  sfx(1)
+ else
+  sfx(2)
  end
 
  … = spawn()
 end
 
-function uplevel()
- level  += 1
- droplag = init_droplag()
- sprites = init_sprites()
+function uplevel(new)
+ if (level != new) then
+  level = new
+  droplag = init_droplag()
+  sprites = init_sprites()
+ end
 end
 
 function init_droplag()
@@ -219,12 +214,11 @@ function init_sprites()
           [11] = 136, }
  }
 
- pal()
- pal({ [0] = 129 }, 1)
-
  local palette = level % 9
  local offset  = (palette * 4)
 
+ pal()
+ pal({ [0] = 129 }, 1)
  pal(colors[palette], 1)
 
  return {
