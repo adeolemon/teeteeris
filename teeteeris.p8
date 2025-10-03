@@ -181,73 +181,56 @@ function init_droplag()
 end
 
 function init_sprites()
- local black  = 0
- local blue   = 1
- local purple = 2
- local green  = 3
- local brown  = 4
- local puke   = 5
- local gray   = 6
- local white  = 7
- local red    = 8
- local orange = 9
- local yellow = 10
- local lime   = 11
- local sky    = 12
- local mauve  = 13
- local pink   = 14
- local tan    = 15
-
  local colors = {
-  [0] = { [puke]   = 131,
-          [mauve]  = 140, },
+  [0] = { [05] = 131,
+          [13] = 140, },
 
-  [1] = { [purple] = 130,
-          [green]  = 131,
-          [yellow] = 134,
-          [lime]   = 136,
-          [sky]    = 137, },
+  [1] = { [02] = 130,
+          [03] = 131,
+          [10] = 134,
+          [11] = 136,
+          [12] = 137, },
 
-  [2] = { [green]  = 139,
-          [brown]  = 135,
-          [lime]   = 138,
-          [mauve]  = 140, },
+  [2] = { [03] = 139,
+          [04] = 135,
+          [11] = 138,
+          [13] = 140, },
 
-  [3] = { [purple] = 132,
-          [puke]   = 134,
-          [red]    = 136,
-          [orange] = 139,
-          [yellow] = 131,
-          [mauve]  = 140, },
+  [3] = { [02] = 132,
+          [05] = 134,
+          [08] = 136,
+          [09] = 139,
+          [10] = 131,
+          [13] = 140, },
 
-  [4] = { [purple] = 130,
-          [brown]  = 131,
-          [orange] = 139,
-          [sky]    = 138,
-          [tan]    = 135, },
+  [4] = { [02] = 130,
+          [04] = 131,
+          [09] = 139,
+          [12] = 138,
+          [15] = 135, },
 
-  [5] = { [purple] = 132,
-          [green]  = 137,
-          [puke]   = 134,
-          [pink]   = 135, },
+  [5] = { [02] = 132,
+          [03] = 137,
+          [05] = 134,
+          [14] = 135, },
 
-  [6] = { [puke]   = 134,
-          [orange] = 136,
-          [yellow] = 130,
-          [lime]   = 140 },
+  [6] = { [05] = 134,
+          [09] = 136,
+          [10] = 130,
+          [11] = 140 },
 
-  [7] = { [purple] = 130,
-          [green]  = 134,
-          [sky]    = 135,
-          [pink]   = 132, },
+  [7] = { [02] = 130,
+          [03] = 134,
+          [12] = 135,
+          [14] = 132, },
 
-  [8] = { [orange] = 130,
-          [yellow] = 135,
-          [lime]   = 136, }
+  [8] = { [09] = 130,
+          [10] = 135,
+          [11] = 136, }
  }
 
  pal()
- pal({[0] = 129}, 1)
+ pal({ [0] = 129 }, 1)
 
  local palette = level % 9
  local offset  = (palette * 4)
