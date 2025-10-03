@@ -263,7 +263,7 @@ function _draw()
   ▒.width, ▒.height, 0, 0)
 
  cursor(2, 2, 7)
- ? "lines\n\n" .. lines
+ ?"lines\n\n" .. lines
 
  cursor(100, 2, 7) ?"next"
 
@@ -275,12 +275,11 @@ function _draw()
   )
  end
 
- cursor(100, 30, 7)
- ? "level\n"
- ? level
+ cursor(100, 30, 7) ?"level\n"
+ ?level
 
- cursor(2, 30, 7)
- ? "stats\n"
+ cursor(2, 30, 7) ?"stats\n"
+
  for n in all(names) do
   local pre = '00'
   local num = stats[n]
@@ -315,25 +314,14 @@ function _draw()
   ▒.width, ▒.height, 0, 6)
 
  if game == 'over' then
-  rrectfill(
-   40, 36, 45, 15, 2, 7)
-  rrect(
-   42, 38, 41, 11, 2, 6)
-
-  cursor(45-1, 41, 0)
-  ?"game over"
-
-  cursor(45+1, 41, 0)
-  ?"game over"
-
-  cursor(45, 41-1, 0)
-  ?"game over"
-
-  cursor(45, 41+1, 0)
-  ?"game over"
-
-  cursor(45, 41, 7)
-  ?"game over"
+  rrectfill(40,36,45,15,2,7)
+  rrect(42,38,41,11,2,6)
+  color(0)
+  cursor(45-1,41)?"game over"
+  cursor(45+1,41)?"game over"
+  cursor(45,41-1)?"game over"
+  cursor(45,41+1)?"game over"
+  cursor(45,41,7)?"game over"
  end
 end
 
