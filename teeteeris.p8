@@ -128,11 +128,12 @@ function lock(spin, x, y)
    { 0,0,0,0,0,0,0,0,0,0 }, 1)
  end
 
-  if lines > 0 and
-   0 == (lines % 10) then
+ lines += #full
 
-   uplevel()
-  end
+ if lines > 0 and
+  0 == (lines % 10) then
+
+  uplevel()
  end
 
  … = spawn()
