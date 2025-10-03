@@ -66,10 +66,10 @@ function spawn()
  }
 end
 
-function move(_)
- local x = ….x + (_.yaw   or 0)
- local y = ….y + (_.pitch or 0)
- local spin = ….spin + (_.roll or 0)
+function mv(roll, pitch, yaw)
+ local spin = ….spin + roll
+ local y    = ….y    + pitch
+ local x    = ….x    + yaw
 
  if (spin < 0) spin = 9
  if (spin > 9) spin = 0
@@ -322,43 +322,24 @@ end
 function _update60()
  if (game == 'over') return
 
- if     btnp(❎) then cw()
- elseif btnp(🅾️) then ccw()
- end
+ local roll, pitch, yaw = 0,0,0
 
- if     btnp(⬅️) then left()
- elseif btnp(➡️) then right()
- end
+ if (btnp(🅾️)) roll = -3
+ if (btnp(❎)) roll =  3
+
+ if (btnp(⬅️)) yaw = -1
+ if (btnp(➡️)) yaw =  1
 
  if btn(⬇️) then
-  if (0 == tick % 4) down()
+  if (0 == tick % 4) pitch = 1
  elseif tick >= droplag then
-  tick = 0
-
-  down()
+  pitch = 1
+  tick  = 0
  end
 
+ mv(roll, pitch, yaw)
+
  tick += 1
-end
-
-function left()
- move({ yaw = -1 })
-end
-
-function right()
- move({ yaw = 1 })
-end
-
-function down()
- move({ pitch = 1 })
-end
-
-function cw()
- move({ roll = 3 })
-end
-
-function ccw()
- move({ roll = -3 })
 end
 
 function init_board()
