@@ -7,7 +7,6 @@ function _init()
  names = { i,o,t,l,s,j,z }
  stats = { 0,0,0,0,0,0,0 }
  lines = 0
- score = 0
  level = 0
 
  shapes  = init_shapes()
