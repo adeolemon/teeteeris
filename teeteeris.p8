@@ -19,7 +19,6 @@ function _init()
  …  = spawn()      -- piece(q)
 
  poke(0x5f5d, 4)  -- "das"
- pal({ [0] = 129 }, 1)
 
  tick = 0
  game = 'going'
