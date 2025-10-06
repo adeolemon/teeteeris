@@ -247,8 +247,8 @@ function _draw()
  end
 
  for y = 1, #▒ do
-  for x = 1, #▒[y] do
-   spr(sprites[▒[y][x]],
+  for x, n in ipairs(▒[y]) do
+   spr(sprites[n],
     ▒.left + 1 + ((x-1) * px),
     ▒.top  + 1 + ((y-1) * px))
   end
@@ -257,11 +257,12 @@ function _draw()
  for █ in all(
   shapes[….name][….spin]) do
 
-  spr(
-   sprites[….name],
-   ▒.left +1 +((….x +█.x -1) *px),
-   ▒.top  +1 +((….y +█.y -1) *px)
-  )
+  local x = ….x + █.x
+  local y = ….y + █.y
+
+  spr(sprites[….name],
+   ▒.left + 1 + ((x-1) * px),
+   ▒.top  + 1 + ((y-1) * px))
  end
 
  if game == 'over' then
