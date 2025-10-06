@@ -35,7 +35,6 @@ function spawn()
   end
  end
 
- srand(time())
  nxt = del(bag, rnd(bag))
 
  for █ in all(shapes[name][spin]) do
