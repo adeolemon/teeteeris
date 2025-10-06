@@ -232,9 +232,6 @@ function _draw()
   spr(sprites[nxt], x, y)
  end
 
--- print(lines, 3, 32, 7)
--- h1("lines", 3, 60)
-
 
  h1("level", 102, 44)
  if level > 9 then
@@ -264,9 +261,7 @@ function _draw()
  if game == 'over' then
   rrectfill(40,36,45,15,2,7)
   rrect(42,38,41,11,2,6)
-
-  color(0)
-  ?"game over", 45, 41
+  ?"game over", 45, 41, 0
  end
 end
 
