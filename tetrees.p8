@@ -216,7 +216,14 @@ function _draw()
  ▒.height = px * #▒    + 2
 
  cls()
- map()
+
+ rrect( -- board shadow
+  ▒.left+1, ▒.top+1,
+  ▒.width,  ▒.height, 0, 1)
+
+ rrect( -- board border
+  ▒.left,  ▒.top,
+  ▒.width, ▒.height, 0, 7)
 
  h1("\^unext", 104, 100)
  for █ in
