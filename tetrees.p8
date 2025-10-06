@@ -177,7 +177,7 @@ function init_sprites()
   [6] = { [05] = 134,
           [09] = 136,
           [10] = 130,
-          [11] = 140 },
+          [11] = 140, },
 
   [7] = { [02] = 130,
           [03] = 134,
@@ -190,20 +190,20 @@ function init_sprites()
  }
 
  local palette = level % 9
- local offset  = (palette * 4)
+ local spr_start = (palette * 4)
 
  pal()
  pal({ [0] = 1, 129 }, 1)
  pal(colors[palette],  1)
 
  return {
-  [i] = 1 + offset,
-  [o] = 2 + offset,
-  [t] = 2 + offset,
-  [l] = 3 + offset,
-  [s] = 3 + offset,
-  [j] = 4 + offset,
-  [z] = 4 + offset
+  [i] = 1 + spr_start,
+  [o] = 2 + spr_start,
+  [t] = 2 + spr_start,
+  [l] = 3 + spr_start,
+  [s] = 3 + spr_start,
+  [j] = 4 + spr_start,
+  [z] = 4 + spr_start
  }
 end
 
