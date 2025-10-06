@@ -128,36 +128,15 @@ function uplevel(new)
 end
 
 function init_droplag()
- if (0 == level) return 48
- if (1 == level) return 43
- if (2 == level) return 38
- if (3 == level) return 33
- if (4 == level) return 28
- if (5 == level) return 23
- if (6 == level) return 18
- if (7 == level) return 13
- if (8 == level) return 8
- if (9 == level) return 6
-
- if level >= 10 and
-    level <= 12 then
-  return 5
+ if level <= 8 then
+  return 48 - (level * 5)
  end
 
- if level >= 13 and
-    level <= 15 then
-  return 4
- end
-
- if level >= 16 and
-    level <= 18 then
-  return 3
- end
-
- if level >= 19 and
-    level <= 28 then
-  return 2
- end
+ if (level == 09) return 6
+ if (level <= 12) return 5
+ if (level <= 15) return 4
+ if (level <= 18) return 3
+ if (level <= 28) return 2
 
  return 1
 end
