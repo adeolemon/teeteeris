@@ -118,9 +118,9 @@ function lock(spin, x, y)
  … = spawn()
 end
 
-function uplevel(new)
- if (level != new) then
-  level = new
+function uplevel(new_level)
+ if (level != new_level) then
+  level = new_level
   droplag = init_droplag()
   sprites = init_sprites()
  end
