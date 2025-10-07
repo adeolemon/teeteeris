@@ -3,6 +3,11 @@ version 43
 __lua__
 i=1 o=2 t=3 l=4 s=5 j=6 z=7
 
+▒ = { rows = 20, cols = 10 }
+for row = 1, ▒.rows do
+ ▒[row] = {}
+end
+
 function _init()
  names = { i,o,t,l,s,j,z }
  lines = 0
@@ -38,7 +43,7 @@ function spawn()
  nxt = del(bag, rnd(bag))
 
  for █ in all(shapes[name][spin]) do
-  if ▒[y + █.y][x + █.x] != 0 then
+  if ▒[█.y+y][█.x+x] then
    game = 'over'
   end
  end
@@ -63,12 +68,12 @@ function mv(roll, pitch, yaw)
   shapes[….name][spin]) do
 
   if █.x+x < 1  or
-     █.x+x > 10 or
-     ▒[█.y+y][█.x+x] != 0 then
+     █.x+x > ▒.cols or
+     ▒[█.y+y][█.x+x] then
 
    return
-  elseif █.y+y == #▒ or
-   ▒[█.y+y+1][█.x+x] != 0 then
+  elseif █.y+y == ▒.rows or
+   ▒[█.y+y+1][█.x+x] then
 
    return lock(spin, x, y)
   end
@@ -93,16 +98,20 @@ function lock(spin, x, y)
 
  local cleared = 0
 
- for y = #▒, 1, -1 do
-  if 0 == count(▒[y], 0) then
-   deli(▒, y)
+ for row = ▒.rows, 1, -1 do
+  local taken = 0
+  for col = 1, ▒.cols do
+   if (▒[row][col]) taken += 1
+  end
+
+  if taken == ▒.cols then
+   deli(▒, row)
    cleared += 1
   end
  end
 
  for _ = 1, cleared do
-  add(▒,
-   { 0,0,0,0,0,0,0,0,0,0 }, 1)
+  add(▒, {}, 1)
  end
 
  lines += cleared
@@ -196,14 +205,16 @@ function init_sprites()
 end
 
 function _draw()
- local px  = 6 -- sprite width
-
- ▒.top    = 2
- ▒.left   = 32
- ▒.width  = px * #▒[1] + 2
- ▒.height = px * #▒    + 2
-
  cls()
+
+ local px = 6 -- cell size
+
+ if not ▒.top then
+  ▒.top    = 2
+  ▒.left   = 32
+  ▒.width  = (▒.cols * px) +2
+  ▒.height = (▒.rows * px) +2
+ end
 
  rrect( -- board shadow
   ▒.left+1, ▒.top+1,
@@ -234,11 +245,11 @@ function _draw()
   h1("\^w\^t " .. level, 100, 52)
  end
 
- for y = 1, #▒ do
-  for x, n in ipairs(▒[y]) do
-   spr(sprites[n],
-    ▒.left + 1 + ((x-1) * px),
-    ▒.top  + 1 + ((y-1) * px))
+ for row = 1, ▒.rows do
+  for col = 1, ▒.cols do
+   spr(sprites[▒[row][col]],
+    ▒.left +1 +((col-1) * px),
+    ▒.top  +1 +((row-1) * px))
   end
  end
 
@@ -288,29 +299,6 @@ function _update60()
 
  tick += 1
 end
-
-▒ = {
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 },
- { 0,0,0,0,0,0,0,0,0,0 }
-}
 
 function init_shapes()
  local tetrominos = {
