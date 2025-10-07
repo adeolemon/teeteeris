@@ -107,10 +107,10 @@ function lock(spin, x, y)
 
  lines += cleared
 
- if cleared > 0 then
-  uplevel(flr(lines/10))
- elseif cleared == 0 then
+ if cleared == 0 then
   sfx(1)
+ elseif check_level() then
+  sfx(5)
  else
   sfx(2)
  end
@@ -118,11 +118,14 @@ function lock(spin, x, y)
  … = spawn()
 end
 
-function uplevel(new_level)
+function check_level()
+ local new_level = flr(lines/10)
+
  if (level != new_level) then
   level = new_level
   droplag = init_droplag()
   sprites = init_sprites()
+  return true
  end
 end
 
