@@ -29,7 +29,7 @@ end
 
 function spawn()
  local name = nxt
- local spin, y, x = 1, 1, 4
+ local spin, row, col = 1, 1, 4
 
  if #bag == 0 then -- bag empty
   bag = pack(unpack(names))
@@ -43,14 +43,14 @@ function spawn()
  nxt = del(bag, rnd(bag))
 
  for █ in all(shapes[name][spin]) do
-  if ▒[█.y+y][█.x+x] then
+  if ▒[█.row+row][█.col+col] then
    game = 'over'
   end
  end
 
  return {
-  x = x,
-  y = y,
+  row  = row,
+  col  = col,
   name = name,
   spin = spin
  }
@@ -58,8 +58,8 @@ end
 
 function mv(roll, pitch, yaw)
  local spin = ….spin + roll
- local y    = ….y    + pitch
- local x    = ….x    + yaw
+ local row  = ….row  + pitch
+ local col  = ….col  + yaw
 
  if (spin < 1) spin = 4
  if (spin > 4) spin = 1
@@ -67,20 +67,22 @@ function mv(roll, pitch, yaw)
  for █ in all(
   shapes[….name][spin]) do
 
-  if █.x+x < 1  or
-     █.x+x > ▒.cols or
-     ▒[█.y+y][█.x+x] then
+  local row = row + █.row
+  local col = col + █.col
+
+  if ▒[row][col] or col < 1
+   or col > ▒.cols then
 
    return
-  elseif █.y+y == ▒.rows or
-   ▒[█.y+y+1][█.x+x] then
+  elseif row == ▒.rows
+   or ▒[row+1][col] then
 
    return lock(spin, x, y)
   end
  end
 
  if (….spin != spin) sfx(0)
- if (….x    != x   ) sfx(3)
+ if (….col  != col ) sfx(3)
 
  ….spin = spin
  ….x = x
@@ -228,8 +230,8 @@ function _draw()
  for █ in
   all(shapes[nxt][1]) do
 
-  local x = 102 + (█.x * px)
-  local y = 112 + (█.y * px)
+  local x = 102 + (█.col * px)
+  local y = 112 + (█.row * px)
 
   if (nxt == i) x -= 2
   if (nxt == o) x += 4
@@ -256,12 +258,15 @@ function _draw()
  for █ in all(
   shapes[….name][….spin]) do
 
-  local x = ….x + █.x
-  local y = ….y + █.y
+  local row = ….row + █.row
+  local col = ….col + █.col
+
+  local x = (col - 1) * px
+  local y = (row - 1) * px
 
   spr(sprites[….name],
-   ▒.left + 1 + ((x-1) * px),
-   ▒.top  + 1 + ((y-1) * px))
+   ▒.left + 1 + x,
+   ▒.top  + 1 + y)
  end
 
  if game == 'over' then
@@ -409,12 +414,12 @@ function init_shapes()
    shapes[n][spin] =
     shapes[n][spin] or {}
 
-   for y, row in pairs(rows) do
-    for x, ch in pairs(row) do
+   for row, cols in pairs(rows) do
+    for col, ch in pairs(cols) do
      if ch == █ then
       add(shapes[n][spin], {
-       y = y-1,
-       x = x-1
+       row = row-1,
+       col = col-1
       })
      end
     end
