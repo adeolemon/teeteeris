@@ -12,6 +12,7 @@ function _init()
  names = { i,o,t,l,s,j,z }
  lines = 0
  level = 0
+ clear = {}
 
  shapes  = init_shapes()
  sprites = init_sprites()
@@ -64,6 +65,8 @@ function mv(roll, pitch, yaw)
  if (spin < 1) spin = 4
  if (spin > 4) spin = 1
 
+ local bottomed_out = false
+
  for █ in all(
   shapes[….name][spin]) do
 
@@ -77,7 +80,8 @@ function mv(roll, pitch, yaw)
   elseif row == ▒.rows
    or ▒[row+1][col] then
 
-   return lock(spin, x, y)
+   bottomed_out = true
+   break
   end
  end
 
@@ -85,51 +89,46 @@ function mv(roll, pitch, yaw)
  if (….col  != col ) sfx(3)
 
  ….spin = spin
- ….x = x
- ….y = y
+ ….col = col
+ ….row = row
 
- return true
+ if (bottomed_out) then
+  for █ in all(
+   shapes[….name][spin]) do
+    local row = row + █.row
+    local col = col + █.col
+
+    ▒[row][col] = ….name
+	 end
+
+  … = spawn()
+  check_cleared()
+
+  if #clear == 0 then
+   sfx(1)
+  elseif level_changed() then
+   sfx(5)
+  else
+   sfx(2)
+  end
+ end
 end
 
-function lock(spin, x, y)
- for █ in all(
-  shapes[….name][spin]) do
-
-  ▒[█.y+y][█.x+x] = ….name
- end
-
- local cleared = 0
-
- for row = ▒.rows, 1, -1 do
-  local taken = 0
+function check_cleared()
+ for row = 1, ▒.rows do
+  local free = ▒.cols
   for col = 1, ▒.cols do
-   if (▒[row][col]) taken += 1
+   if (▒[row][col]) free -= 1
   end
 
-  if taken == ▒.cols then
-   deli(▒, row)
-   cleared += 1
+  if free == 0 do
+   add(clear, row)
+   lines += 1
   end
  end
-
- for _ = 1, cleared do
-  add(▒, {}, 1)
- end
-
- lines += cleared
-
- if cleared == 0 then
-  sfx(1)
- elseif check_level() then
-  sfx(5)
- else
-  sfx(2)
- end
-
- … = spawn()
 end
 
-function check_level()
+function level_changed()
  local new_level = flr(lines/10)
 
  if (level != new_level) then
@@ -255,6 +254,8 @@ function _draw()
   end
  end
 
+ if (#clear > 0) ani_clear()
+
  for █ in all(
   shapes[….name][….spin]) do
 
@@ -276,6 +277,42 @@ function _draw()
  end
 end
 
+function ani_clear()
+ local erased = false
+ local ⬅️, ➡️ = 5, 6
+
+ while ⬅️ >= 1 or
+       ➡️ <= ▒.cols do
+
+  for row in all(clear) do
+   if ▒[row][⬅️] or
+      ▒[row][➡️] then
+
+	   ▒[row][⬅️] = nil
+	   ▒[row][➡️] = nil
+    erased = true
+	  end
+  end
+
+  ⬅️ -= 1
+  ➡️ += 1
+
+  if (erased) break
+ end
+
+ if not erased then
+  for row = #clear, 1, -1 do
+   deli(▒, clear[row])
+  end
+
+  for _ = 1, #clear do
+   add(▒, {}, 1)
+  end
+
+  clear = {}
+ end
+end
+
 function h1(str, x, y)
  ? str, x+1, y,   1
  ? str, x,   y+1, 1
@@ -283,7 +320,10 @@ function h1(str, x, y)
 end
 
 function _update60()
+ tick += 1
+
  if (game == 'over') return
+ if (#clear > 0)     return
 
  local roll, pitch, yaw = 0,0,0
 
@@ -301,8 +341,6 @@ function _update60()
  end
 
  mv(roll, pitch, yaw)
-
- tick += 1
 end
 
 function init_shapes()
